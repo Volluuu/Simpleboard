@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.BoardMapper">
+    <select id="getBoardTortal"  resultType="int">
+       	select count(*)
+   		from "board"
+    </select>
+    <select id="getBoardUser" parameterType="int" resultType="int">
+        select *
+   		from "board"
+        where user_num = #{user_num}
+    </select>
+    
+    <select id="boardByUser" parameterType="Map" resultType="Map">
+        select *
+   		from "board" order by board_num desc
+   		limit #{perPage} offset #{startNum}
+    </select>
+    
+    <select id="getBoardData" parameterType="int" resultType="data.dto.BoardDto">
+    	  select 
+        u.user_num ,u.user_name ,u.user_email ,u.user_id ,b.board_num ,b.board_title , b.board_content, b.board_writeday
+		 from "user" u 
+		 join "board" b on b.user_num = u.user_num
+		 where b.user_num = 1 and b.board_num = #{board_num}
+    </select>
+    
+    <insert id="insertBoard" parameterType="data.dto.BoardDto">
+        insert into "board"
+        (board_title,board_content,user_num,board_writeday) 
+        values (#{board_title},#{board_content},#{user_num},now())
+    </insert>
+    <!--    아이디 중복 체크-->
+    <update id="updateBoard" parameterType="data.dto.BoardDto">
+    	update "board" 
+		set board_title = #{board_title}, board_content = #{board_content}
+		where board_num = #{board_num}
+    </update>
+   
+    <!--    회원 탈퇴-->
+    <delete id="deleteBoard" parameterType="int">
+        delete
+        from "board"
+        where board_num=#{board_num}
+    </delete>
+</mapper>

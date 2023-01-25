@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.ReboardMapper">
+    <select id="getReboardCount"  resultType="int">
+       	select count(*)
+   		from "reboard"
+   		where board_num = #{board_num}
+    </select>
+    
+    <select id="reboardByUser" parameterType="int" resultType="data.dto.ReboardDto">
+    	select * 
+		from "user" u
+		join "reboard" r on r.user_num = u.user_num 
+		where r.user_num=#{user_num} and r.board_num = #{board_num}
+    </select>
+    
+    <insert id="insertReboard" parameterType="data.dto.ReboardDto">
+        insert into "reboard" (reboard_content,user_num,board_num,reboard_writeday)
+        values(#{reboard_content},#{user_num},#{board_num},now())
+        
+    </insert>
+    <update id="updateReboard" parameterType="data.dto.ReboardDto">
+    	update "reboard" set reboard_content=#{reboard_content} where reboard_num=#{reboard_num}
+    </update>
+   
+    <!--    회원 탈퇴-->
+    <delete id="deleteReboard" parameterType="int">
+       delete from "reboard" where reboard_num = #{reboard_num} and user_num=#{user_num}
+    </delete>
+</mapper>

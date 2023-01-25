@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.UserMapper">
+
+	<select id="getTestUser" resultType="data.dto.UserDto">
+		select *
+		from "user"
+		where user_num = 1
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" parameterType="data.dto.UserDto" resultType="data.dto.UserDto">
+		select * from "user" where user_id = #{user_id} and user_pass = #{user_pass}
+	</select>
+	
+    <select id="getUserInfo" parameterType="String" resultType="data.dto.UserDto">
+       	select *
+   		from "user"
+        where user_id = #{user_id}
+    </select>
+    <select id="getUserByNum" parameterType="int" resultType="data.dto.UserDto">
+        select *
+        from "user"
+        where user_num = #{user_num}
+    </select>
+    <insert id="insertUser" parameterType="data.dto.UserDto">
+        insert into "user"
+        (user_name,user_pass,user_email,user_id,state) 
+        values (#{user_name},#{user_pass},#{user_email},#{user_id},1)
+    </insert>
+    <!--    아이디 중복 체크-->
+    <select id="idCheck" parameterType="String" resultType="int">
+        select count(*)
+        from "user"
+        where user_id = #{user_id}
+    </select>
+    <select id="passCheck" parameterType="data.dto.UserDto" resultType="int">
+     	select count(*)
+        from "user"
+        where user_num = #{user_num} and user_pass = #{user_pass}
+    </select>
+    
+     <select id="findUser" resultType="data.dto.UserDto">
+      SELECT user_id, user_pass, auth
+      FROM "user"
+      WHERE user_id = #{user_id}
+    </select>
+
+    <select id="findUserId" resultType="data.dto.UserDto">
+      SELECT user_num
+      FROM "user"
+      WHERE user_id = #{user_id};
+    </select>
+    
+    <update id="passChange" parameterType="data.dto.UserDto">
+    	update "user"
+        set user_pass = #{user_pass}
+        where user_num = #{user_num}
+    </update>
+
+   
+    <!--    회원 탈퇴-->
+    <delete id="deleteUser" parameterType="int">
+        delete
+        from user
+        where user_num = #{user_num}
+    </delete>
+</mapper>
